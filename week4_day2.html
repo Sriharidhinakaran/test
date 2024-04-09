@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Flowers School</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center; /* Align all content in the center */
+            background-color: darkturquoise;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #register-page, #welcome-page, #monthly-activity-page {
+            display: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        select {
+            padding: 5px;
+            margin-top: 10px;
+        }
+        .login{
+            display:grid;
+           gap: 20px;
+            justify-content: center;
+        
+        }
+        .login-page{
+            background-color: #00968d78;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            
+        }
+        .logtext{
+            padding-bottom: 20px;
+        }
+        .logbutton{
+            background-color: crimson;
+            padding: 6px;
+            border:none;
+            color: whitesmoke;
+            margin-bottom: 10px;
+        }
+        .name{
+            padding: 7px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- School Logo and Name -->
+        <div class="school-header">
+            <img src="download.png" alt="School Logo" style="width: 100px;">
+            <h1 class="school-name">Spring Flowers School</h1>
+        </div>
+
+        <div id="login-page" class="login-page">
+            <h2 class="logtext">Login</h2>
+            <form id="login-form" class="login">
+                <input  class="name" type="text" id="login-username" placeholder="Username" required>
+                <input class="name" type="password" id="login-password" placeholder="Password" required>
+                <button type="submit" class="logbutton">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#" id="register-link">Register</a></p>
+        </div>
+        
+        <div id="register-page" class="login-page">
+            <h2>Register</h2>
+            <form id="register-form" class="login">
+                <input class="name" type="text" id="new-username" placeholder="Username" required>
+                <input class="name" type="password" id="new-password" placeholder="Password" required>
+                <button type="submit" class="logbutton">Register</button>
+            </form>
+            <p>Already have an account? <a href="#" id="login-link">Login</a></p>
+        </div>
+        
+        <div id="welcome-page">
+            <h2>Welcome, <span id="welcome-username"></span>!</h2>
+            <button id="monthly-chart-btn">Monthly Chart</button>
+        </div>
+        
+        <div id="monthly-activity-page">
+            <h2>Monthly Activity</h2>
+            <select id="subject-dropdown">
+                <option value="Maths">Maths</option>
+                <option value="Science">Science</option>
+                <option value="English">English</option>
+            </select>
+            <div id="activity-list"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Retrieve input values
+            var username = document.getElementById("login-username").value;
+            var password = document.getElementById("login-password").value;
+            
+            // Perform login validation (in this example, just check if username and password match)
+            if (localStorage.getItem(username) === password) {
+                // Login successful
+                document.getElementById("welcome-username").textContent = username;
+                showPage("welcome-page");
+            } else {
+                // Login failed
+                alert("Invalid username or password.");
+            }
+        });
+
+        // Event listener for register form submission
+        document.getElementById("register-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Retrieve input values
+            var username = document.getElementById("new-username").value;
+            var password = document.getElementById("new-password").value;
+            
+            // Perform registration (store username and password in localStorage)
+            localStorage.setItem(username, password);
+            alert("Registration successful. Please log in.");
+            showPage("login-page");
+        });
+
+        // Event listener for register link click
+        document.getElementById("register-link").addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            showPage("register-page");
+        });
+
+        // Event listener for login link click
+        document.getElementById("login-link").addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            showPage("login-page");
+        });
+
+        // Event listener for Monthly Chart button click
+        document.getElementById("monthly-chart-btn").addEventListener("click", function() {
+            showPage("monthly-activity-page");
+        });
+
+        // Event listener for subject dropdown change
+        document.getElementById("subject-dropdown").addEventListener("change", function() {
+            var selectedSubject = this.value;
+            var activityList = document.getElementById("activity-list");
+            activityList.innerHTML = ""; // Clear previous activity list
+
+            // Example monthly activities (you should replace this with your actual data)
+            var monthlyActivities = [
+                { id: 1, activity: "New chapters have been added", subject: "Maths" },
+                { id: 2, activity: "Your samples are ready", subject: "Science" },
+                { id: 3, activity: "Poem submission by eod", subject: "English" },
+                // Add more activities here
+            ];
+
+            // Filter activities based on selected subject
+            var filteredActivities = monthlyActivities.filter(function(activity) {
+                return activity.subject === selectedSubject;
+            });
+
+            // Display activities
+            filteredActivities.forEach(function(activity) {
+                var activityItem = document.createElement("div");
+                activityItem.textContent = activity.activity;
+                activityList.appendChild(activityItem);
+            });
+        });
+
+        // Function to display a specific page while hiding others
+        function showPage(pageId) {
+            var pages = document.querySelectorAll(".container > div");
+            pages.forEach(function(page) {
+                if (page.id === pageId) {
+                    page.style.display = "block";
+                } else {
+                    page.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
